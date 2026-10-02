@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>upVoulume - Free Online Audio & Video Volume Booster up to 1000%</title>
-<meta name="description" content="upVoulume: boost MP3, WAV, MP4 volume up to 1000% in your browser. Change the gain live while it plays.">
+<title>upVoulume - Free Online Audio & Video Volume Booster up to 100000%</title>
+<meta name="description" content="upVoulume: boost MP3, WAV, MP4 volume up to 100000% in your browser. Change the gain live while it plays.">
 <meta name="keywords" content="upVoulume, volume booster, audio booster, gain, web audio api, increase mp3 volume">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0d0d10">
 <meta property="og:title" content="upVoulume - Volume Booster">
-<meta property="og:description" content="Boost audio and video volume up to 1000%, live, in your browser.">
+<meta property="og:description" content="Boost audio and video volume up to 100000%, live, in your browser.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mahir-g9.github.io/upVoulume/">
 <style>
@@ -74,8 +74,8 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:8
     <div class="gain">
       <div class="readout" id="readout">100<small>%</small></div>
       <div class="label">Gain</div>
-      <input type="range" id="gain" min="0" max="1000" step="1" value="100" aria-label="Gain percentage">
-      <div class="scale"><span>0%</span><span>100%</span><span>500%</span><span>1000%</span></div>
+      <input type="range" id="gain" min="0" max="1000" step="1" value="400" aria-label="Gain percentage">
+      <div class="scale"><span>1%</span><span>10%</span><span>100%</span><span>1,000%</span><span>10,000%</span><span>100,000%</span></div>
       <div class="warn" id="warn"></div>
     </div>
   </div>
@@ -112,10 +112,12 @@ input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:8
   }
 
   function applyGain() {
-    var pct = Number(slider.value);
-    readout.firstChild.nodeValue = pct;
+    var pos = Number(slider.value);
+    // Log scale: slider 0-1000 maps to 0% and 1%-100000%
+    var pct = pos === 0 ? 0 : Math.round(Math.pow(10, pos / 200));
+    readout.firstChild.nodeValue = pct.toLocaleString('en-US');
     readout.classList.toggle('hot', pct > 100);
-    slider.style.setProperty('--fill', (pct / 10) + '%');
+    slider.style.setProperty('--fill', (pos / 10) + '%');
     warn.textContent = pct > 300 ? 'Very loud. Lower your device volume first.' : '';
     if (gainNode) {
       // Smooth change so moving the slider while playing never clicks
