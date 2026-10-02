@@ -1,1232 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- In your HTML head section: -->
-<title>upVoulume - Web Audio Volume Enhancer & EQ Tool | Boost Sound 400%</title>
-<meta name="description" content="upVoulume: Free online audio volume booster with real-time EQ, frequency visualization, and Web Audio API processing. Enhance MP3, WAV, MP4 files up to 400% louder.">
-<meta name="keywords" content="upVoulume, audio volume booster, sound enhancer, web audio api, online eq tool, mp3 volume increase, wav editor, audio processing, frequency analyzer">
-<meta name="author" content="upVoulume Audio Tools">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>upVoulume - Free Online Audio & Video Volume Booster up to 1000%</title>
+<meta name="description" content="upVoulume: boost MP3, WAV, MP4 volume up to 1000% in your browser. Change the gain live while it plays.">
+<meta name="keywords" content="upVoulume, volume booster, audio booster, gain, web audio api, increase mp3 volume">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="upVoulume - Web Audio Volume Enhancer">
-<meta property="og:description" content="Free online tool to boost audio volume up to 400% with real-time EQ and frequency visualization">
+<meta name="theme-color" content="#0d0d10">
+<meta property="og:title" content="upVoulume - Volume Booster">
+<meta property="og:description" content="Boost audio and video volume up to 1000%, live, in your browser.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mahir-g9.github.io/upVoulume/">
-<meta property="og:image" content="https://github.com/Mahir-g9/upVoulume/upVoulume.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="upVoulume - Audio Volume Booster">
-<meta name="twitter:description" content="Boost audio volume online with Web Audio API. Free tool for MP3, WAV, MP4 files.">
-<meta name="application-name" content="upVoulume">
-<meta name="apple-mobile-web-app-title" content="upVoulume">
-<meta name="theme-color" content="#0ea5e9">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Put this in your <head> section -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "LaudMare Audio Enhancer",
-  "description": "Free online audio volume booster. Increase MP3, WAV, MP4 volume up to 400% with real-time EQ controls.",
-  "url": "https://mahir-g9.github.io/upVoulume/",
-  "applicationCategory": "MusicApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0"
-  }
+<style>
+:root{
+  --bg:#0d0d10; --panel:#16161b; --line:#26262e;
+  --text:#f2f0eb; --dim:#8b8a93; --accent:#e8b04b;
 }
-</script>
-    <style>
-        /* [Keep all the previous CSS styles - they're the same] */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        :root {
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --bg-card: #ffffff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --border: #e2e8f0;
-            --shadow: rgba(0, 0, 0, 0.08);
-            --shadow-hover: rgba(0, 0, 0, 0.12);
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-            --glow: transparent;
-            --transition-speed: 0.3s;
-            --border-radius: 16px;
-            --border-radius-sm: 8px;
-            --border-radius-lg: 24px;
-        }
-
-        .dark-mode {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --accent: #60a5fa;
-            --accent-hover: #93c5fd;
-            --border: #334155;
-            --shadow: rgba(0, 0, 0, 0.3);
-            --shadow-hover: rgba(0, 0, 0, 0.4);
-            --success: #34d399;
-            --warning: #fbbf24;
-            --error: #f87171;
-            --glow: rgba(96, 165, 250, 0.4);
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background-color var(--transition-speed), color var(--transition-speed);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 900px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .title h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .title i {
-            font-size: 2.2rem;
-            color: var(--accent);
-        }
-
-        .theme-toggle {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            width: 60px;
-            height: 30px;
-            position: relative;
-            cursor: pointer;
-            transition: all var(--transition-speed);
-            box-shadow: 0 4px 6px var(--shadow);
-        }
-
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px var(--shadow-hover);
-        }
-
-        .theme-toggle::before {
-            content: '';
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background-color: var(--accent);
-            top: 1px;
-            left: 2px;
-            transition: transform var(--transition-speed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            font-size: 14px;
-            color: white;
-        }
-
-        .dark-mode .theme-toggle::before {
-            content: '\f186';
-            transform: translateX(30px);
-        }
-
-        .light-mode .theme-toggle::before {
-            content: '\f185';
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 6px 12px var(--shadow);
-            transition: all var(--transition-speed);
-            border: 1px solid var(--border);
-        }
-
-        .dark-mode .card {
-            box-shadow: 0 6px 12px var(--shadow), 0 0 20px var(--glow);
-        }
-
-        .card:hover {
-            box-shadow: 0 8px 16px var(--shadow-hover);
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--accent);
-        }
-
-        .card-title i {
-            font-size: 1.2rem;
-        }
-
-        .file-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            border-radius: var(--border-radius-sm);
-        }
-
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .file-input-button {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 24px;
-            background-color: var(--accent);
-            color: white;
-            border-radius: var(--border-radius-sm);
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color var(--transition-speed), transform var(--transition-speed);
-        }
-
-        .file-input-button:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .file-name {
-            padding: 14px 18px;
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius-sm);
-            border: 1px dashed var(--border);
-            font-style: italic;
-            color: var(--text-secondary);
-        }
-
-        .file-name span {
-            color: var(--accent);
-            font-weight: 600;
-            font-style: normal;
-        }
-
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 768px) {
-            .controls {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .control-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .control-label {
-            font-weight: 600;
-            color: var(--text-secondary);
-            min-width: 120px;
-        }
-
-        .value-display {
-            font-weight: 700;
-            color: var(--accent);
-            min-width: 50px;
-        }
-
-        .hz-input {
-            width: 120px;
-            padding: 10px 14px;
-            border-radius: var(--border-radius-sm);
-            border: 1px solid var(--border);
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            font-weight: 600;
-            transition: border-color var(--transition-speed);
-        }
-
-        .hz-input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .range-slider {
-            width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            background: var(--bg-secondary);
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .range-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--accent);
-            cursor: pointer;
-            border: 3px solid var(--bg-primary);
-            box-shadow: 0 2px 5px var(--shadow);
-        }
-
-        .range-slider::-moz-range-thumb {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--accent);
-            cursor: pointer;
-            border: 3px solid var(--bg-primary);
-            box-shadow: 0 2px 5px var(--shadow);
-        }
-
-        .playback-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .play-button {
-            padding: 16px 40px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all var(--transition-speed);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .dark-mode .play-button {
-            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4), 0 0 20px rgba(96, 165, 250, 0.3);
-        }
-
-        .play-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.4);
-        }
-
-        .play-button:active {
-            transform: translateY(-1px);
-        }
-
-        .play-button i {
-            font-size: 1.4rem;
-        }
-
-        .play-button.playing {
-            background: linear-gradient(135deg, var(--success), #10b981);
-        }
-
-        .timeline-container {
-            width: 100%;
-        }
-
-        .timeline {
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        .time-display {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
-        .live-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .live-info {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .info-box {
-            padding: 20px;
-            border-radius: var(--border-radius-sm);
-            background-color: var(--bg-secondary);
-            text-align: center;
-            transition: transform var(--transition-speed);
-        }
-
-        .info-box:hover {
-            transform: translateY(-5px);
-        }
-
-        .info-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .info-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent);
-        }
-
-        .dark-mode .info-box {
-            border: 1px solid var(--border);
-        }
-
-        .download-section {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .download-buttons {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .download-button {
-            flex: 1;
-            min-width: 200px;
-            padding: 16px 20px;
-            border-radius: var(--border-radius-sm);
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-speed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .download-audio {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .download-video {
-            background-color: var(--warning);
-            color: white;
-        }
-
-        .download-button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            opacity: 0.9;
-        }
-
-        .download-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .limitation-note {
-            padding: 16px;
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius-sm);
-            border-left: 4px solid var(--warning);
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-
-        .media-player {
-            width: 100%;
-            margin-top: 20px;
-            border-radius: var(--border-radius-sm);
-            overflow: hidden;
-            background-color: var(--bg-secondary);
-        }
-
-        .media-player video, .media-player audio {
-            width: 100%;
-            display: block;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .eq-control {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius-sm);
-            border: 1px solid var(--border);
-        }
-
-        .eq-title {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .eq-slider-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .eq-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            min-width: 100px;
-        }
-
-        .visualizer {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius-sm);
-            border: 1px solid var(--border);
-        }
-
-        .visualizer-title {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .visualizer-canvas {
-            width: 100%;
-            height: 100px;
-            border-radius: var(--border-radius-sm);
-            background-color: var(--bg-primary);
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .slide-in {
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .explanation {
-            margin-top: 10px;
-            padding: 12px;
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius-sm);
-            border-left: 4px solid var(--accent);
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .explanation strong {
-            color: var(--accent);
-        }
-    </style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:"Inter","Helvetica Neue",Arial,sans-serif;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+main{width:100%;max-width:520px}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:1.4rem;letter-spacing:.02em;margin-bottom:28px;color:var(--dim)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:32px 28px}
+.pick{
+  display:block;position:relative;border:1px dashed var(--line);border-radius:12px;
+  padding:14px 16px;color:var(--dim);font-size:.95rem;cursor:pointer;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:border-color .2s,color .2s;
+}
+.pick:hover,.pick:focus-within{border-color:var(--accent);color:var(--text)}
+.pick input{position:absolute;inset:0;opacity:0;cursor:pointer}
+video,audio{display:block;width:100%;margin-top:20px;border-radius:12px;background:#000;outline:none}
+audio{background:none}
+.hidden{display:none}
+.gain{margin-top:36px;text-align:center}
+.readout{font-family:Georgia,"Times New Roman",serif;font-size:4.5rem;line-height:1;font-variant-numeric:tabular-nums;transition:color .2s}
+.readout small{font-size:1.6rem;color:var(--dim);margin-left:4px}
+.readout.hot{color:var(--accent)}
+.label{color:var(--dim);font-size:.9rem;margin-top:8px}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;
+  margin-top:32px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,var(--accent) var(--fill,10%),var(--line) var(--fill,10%));
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:28px;height:28px;border-radius:50%;
+  background:var(--text);border:4px solid var(--bg);box-shadow:0 0 0 1px var(--line);
+}
+input[type=range]::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;background:var(--text);border:4px solid var(--bg);
+}
+input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:8px}
+.scale{display:flex;justify-content:space-between;color:var(--dim);font-size:.8rem;margin-top:12px}
+.warn{margin-top:20px;text-align:center;font-size:.85rem;color:var(--accent);min-height:1.2em}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
-<body class="light-mode">
-    <div class="container">
-        <!-- Header with title and theme toggle -->
-        <div class="header">
-            <div class="title">
-                <i class="fas fa-volume-up"></i>
-                <h1>Volume Upgrader Pro</h1>
-            </div>
-            <div class="theme-toggle" id="themeToggle"></div>
-        </div>
+<body>
+<main>
+  <h1>upVoulume</h1>
+  <div class="panel">
+    <label class="pick">
+      <span id="fileName">Choose an audio or video file</span>
+      <input type="file" id="fileInput" accept="audio/*,video/*,.mp3,.wav,.ogg,.mp4,.webm,.m4a">
+    </label>
 
-        <!-- File Selector Card -->
-        <div class="card slide-in">
-            <div class="card-title">
-                <i class="fas fa-file-audio"></i>
-                <span>Select Media File</span>
-            </div>
-            <div class="file-selector">
-                <div class="file-input-wrapper">
-                    <input type="file" id="fileInput" accept=".mp3,.wav,.ogg,.mp4,.webm">
-                    <div class="file-input-button">
-                        <i class="fas fa-folder-open"></i>
-                        <span>Choose Audio/Video File</span>
-                    </div>
-                </div>
-                <div class="file-name">
-                    Selected file: <span id="fileName">No file selected</span>
-                </div>
-                <div class="media-player" id="mediaPlayer"></div>
-            </div>
-        </div>
+    <video id="player" class="hidden" controls playsinline></video>
 
-        <!-- Volume Control Card -->
-        <div class="card slide-in">
-            <div class="card-title">
-                <i class="fas fa-sliders-h"></i>
-                <span>Volume / Gain Control</span>
-            </div>
-            
-            <div class="explanation">
-                <strong>How Volume Works:</strong> Volume (0-100%) controls the <strong>gain multiplier</strong> (0x to 4x). 
-                100% = 4x volume amplification. Frequency (20-20,000 Hz) sets the EQ center frequency.
-            </div>
-            
-            <div class="controls">
-                <div class="control-group">
-                    <div class="control-row">
-                        <div class="control-label">Volume Level:</div>
-                        <input type="range" id="volumeSlider" class="range-slider" min="0" max="100" step="1" value="50">
-                        <span class="value-display" id="volumePercentage">50%</span>
-                    </div>
-                    <div class="control-row">
-                        <div class="control-label">Current Gain:</div>
-                        <span class="value-display" id="currentGain">1.0x</span>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-row">
-                        <div class="control-label">EQ Frequency:</div>
-                        <input type="number" id="hzInput" class="hz-input" min="20" max="20000" step="1" value="1000">
-                        <span class="value-display">Hz</span>
-                    </div>
-                    <div class="control-row">
-                        <div class="control-label">EQ Boost:</div>
-                        <span class="value-display" id="eqBoost">0 dB</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- EQ Control -->
-            <div class="eq-control">
-                <div class="eq-title">
-                    <i class="fas fa-wave-square"></i>
-                    <span>Frequency Equalizer</span>
-                </div>
-                <div class="eq-slider-container">
-                    <div class="eq-label">Boost at <span id="eqFreqDisplay">1000 Hz</span>:</div>
-                    <input type="range" id="eqSlider" class="range-slider" min="-20" max="20" step="1" value="0">
-                    <span class="value-display" id="eqValue">0 dB</span>
-                </div>
-            </div>
-            
-            <!-- Audio Visualizer -->
-            <div class="visualizer">
-                <div class="visualizer-title">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Audio Frequency Spectrum</span>
-                </div>
-                <canvas id="visualizerCanvas" class="visualizer-canvas"></canvas>
-            </div>
-        </div>
-
-        <!-- Playback Controls Card -->
-        <div class="card slide-in">
-            <div class="card-title">
-                <i class="fas fa-play-circle"></i>
-                <span>Playback Controls</span>
-            </div>
-            <div class="playback-controls">
-                <button class="play-button" id="playButton">
-                    <i class="fas fa-play"></i>
-                    <span>Play Media</span>
-                </button>
-                <div class="timeline-container">
-                    <div class="control-label">Timeline (Time Machine):</div>
-                    <input type="range" id="timelineSlider" class="range-slider timeline" min="0" max="100" step="0.1" value="0">
-                    <div class="time-display">
-                        <span id="currentTime">0:00</span>
-                        <span id="duration">0:00</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Live Audio Info Card -->
-        <div class="card slide-in">
-            <div class="card-title">
-                <i class="fas fa-chart-line"></i>
-                <span>Live Audio Information</span>
-            </div>
-            <div class="live-info">
-                <div class="info-box">
-                    <div class="info-label">Dominant Frequency</div>
-                    <div class="info-value" id="currentFrequency">0 Hz</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-label">Current Volume</div>
-                    <div class="info-value" id="currentVolumeLevel">50%</div>
-                </div>
-            </div>
-            <div class="explanation" style="margin-top: 15px;">
-                <strong>Note:</strong> "Dominant Frequency" shows the loudest frequency in the audio right now. 
-                Most music has bass (20-250Hz), mids (250-2000Hz), and highs (2000-20000Hz).
-            </div>
-        </div>
-
-        <!-- Download Card -->
-        <div class="card slide-in">
-            <div class="card-title">
-                <i class="fas fa-download"></i>
-                <span>Download Processed Media</span>
-            </div>
-            <div class="download-section">
-                <div class="download-buttons">
-                    <button class="download-button download-audio" id="downloadAudio" disabled>
-                        <i class="fas fa-file-audio"></i>
-                        <span>Download Processed Audio</span>
-                    </button>
-                    <button class="download-button download-video" id="downloadVideo" disabled>
-                        <i class="fas fa-file-video"></i>
-                        <span>Download Processed Video</span>
-                    </button>
-                </div>
-                <div class="limitation-note">
-                    <strong>Note:</strong> Full video processing with Web Audio API in the browser has limitations. 
-                    For video files, only the audio track will be processed.
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>Volume Upgrader Pro &copy; 2023 | Web Audio API Expert System</p>
-            <p>Supports MP3, WAV, OGG, MP4, and WebM formats</p>
-        </div>
+    <div class="gain">
+      <div class="readout" id="readout">100<small>%</small></div>
+      <div class="label">Gain</div>
+      <input type="range" id="gain" min="0" max="1000" step="1" value="100" aria-label="Gain percentage">
+      <div class="scale"><span>0%</span><span>100%</span><span>500%</span><span>1000%</span></div>
+      <div class="warn" id="warn"></div>
     </div>
+  </div>
+</main>
 
-    <script>
-        // Web Audio API Components
-        let audioContext = null;
-        let sourceNode = null;
-        let gainNode = null;
-        let analyserNode = null;
-        let biquadFilter = null;
-        let mediaElement = null;
-        let isPlaying = false;
-        let currentFileType = null;
-        let currentFile = null;
-        let canvasCtx = null;
-        let animationFrameId = null;
-        
-        // DOM Elements
-        const themeToggle = document.getElementById('themeToggle');
-        const fileInput = document.getElementById('fileInput');
-        const fileName = document.getElementById('fileName');
-        const mediaPlayer = document.getElementById('mediaPlayer');
-        const hzInput = document.getElementById('hzInput');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumePercentage = document.getElementById('volumePercentage');
-        const currentGain = document.getElementById('currentGain');
-        const playButton = document.getElementById('playButton');
-        const timelineSlider = document.getElementById('timelineSlider');
-        const currentTime = document.getElementById('currentTime');
-        const duration = document.getElementById('duration');
-        const currentFrequency = document.getElementById('currentFrequency');
-        const currentVolumeLevel = document.getElementById('currentVolumeLevel');
-        const downloadAudio = document.getElementById('downloadAudio');
-        const downloadVideo = document.getElementById('downloadVideo');
-        const eqSlider = document.getElementById('eqSlider');
-        const eqValue = document.getElementById('eqValue');
-        const eqFreqDisplay = document.getElementById('eqFreqDisplay');
-        const eqBoost = document.getElementById('eqBoost');
-        const visualizerCanvas = document.getElementById('visualizerCanvas');
-        
-        // Theme Toggle
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
-            
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            themeToggle.classList.toggle('dark-mode', isDarkMode);
-            themeToggle.classList.toggle('light-mode', !isDarkMode);
-        });
-        
-        // Initialize canvas context
-        canvasCtx = visualizerCanvas.getContext('2d');
-        visualizerCanvas.width = visualizerCanvas.offsetWidth;
-        visualizerCanvas.height = visualizerCanvas.offsetHeight;
-        
-        // File Selection
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            currentFile = file;
-            fileName.textContent = file.name;
-            
-            const fileExt = file.name.split('.').pop().toLowerCase();
-            const isVideo = ['mp4', 'webm'].includes(fileExt);
-            currentFileType = isVideo ? 'video' : 'audio';
-            
-            const url = URL.createObjectURL(file);
-            
-            mediaPlayer.innerHTML = '';
-            
-            if (isVideo) {
-                mediaElement = document.createElement('video');
-                mediaElement.controls = true;
-                mediaElement.style.maxHeight = '300px';
-                downloadVideo.disabled = false;
-            } else {
-                mediaElement = document.createElement('audio');
-                mediaElement.controls = true;
-                downloadVideo.disabled = true;
-            }
-            
-            mediaElement.src = url;
-            mediaPlayer.appendChild(mediaElement);
-            
-            downloadAudio.disabled = false;
-            
-            setupMediaListeners();
-            mediaElement.addEventListener('play', initAudioContext);
-        });
-        
-        // Initialize Web Audio API
-        function initAudioContext() {
-            if (audioContext) return;
-            
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // Create nodes
-            sourceNode = audioContext.createMediaElementSource(mediaElement);
-            gainNode = audioContext.createGain();
-            analyserNode = audioContext.createAnalyser();
-            biquadFilter = audioContext.createBiquadFilter();
-            
-            // Configure analyser - LARGER FFT for better frequency resolution
-            analyserNode.fftSize = 8192; // Increased from 2048 for better frequency resolution
-            analyserNode.smoothingTimeConstant = 0.3; // Reduced for more responsive updates
-            
-            // Configure filter (peaking EQ)
-            biquadFilter.type = 'peaking';
-            biquadFilter.frequency.value = parseInt(hzInput.value);
-            biquadFilter.gain.value = 0;
-            biquadFilter.Q.value = 1;
-            
-            // Connect nodes
-            sourceNode.connect(biquadFilter);
-            biquadFilter.connect(gainNode);
-            gainNode.connect(analyserNode);
-            analyserNode.connect(audioContext.destination);
-            
-            // Set initial values
-            updateGain();
-            updateEQ();
-            
-            // Start visualization and frequency analysis
-            visualize();
-            updateAudioInfo();
-        }
-        
-        // Update gain based on volume slider
-        function updateGain() {
-            if (!gainNode) return;
-            
-            const volumeValue = parseInt(volumeSlider.value);
-            
-            // Map percentage to gain (0-4x)
-            let gainValue;
-            if (volumeValue === 0) {
-                gainValue = 0;
-            } else if (volumeValue <= 50) {
-                gainValue = volumeValue / 50;
-            } else {
-                const normalized = (volumeValue - 50) / 50;
-                gainValue = 1 + (normalized * 3);
-            }
-            
-            if (audioContext) {
-                gainNode.gain.setTargetAtTime(gainValue, audioContext.currentTime, 0.01);
-            }
-            
-            volumePercentage.textContent = `${volumeValue}%`;
-            currentGain.textContent = `${gainValue.toFixed(2)}x`;
-            currentVolumeLevel.textContent = `${volumeValue}%`;
-        }
-        
-        // Update EQ based on frequency and boost
-        function updateEQ() {
-            if (!biquadFilter) return;
-            
-            const freqValue = parseInt(hzInput.value);
-            const boostValue = parseInt(eqSlider.value);
-            
-            biquadFilter.frequency.value = freqValue;
-            biquadFilter.gain.value = boostValue;
-            
-            eqFreqDisplay.textContent = `${freqValue} Hz`;
-            eqValue.textContent = `${boostValue} dB`;
-            eqBoost.textContent = `${boostValue} dB`;
-        }
-        
-        // CORRECTED: Find dominant frequency properly
-        function getDominantFrequency() {
-            if (!analyserNode) return 0;
-            
-            // Get frequency data (FFT)
-            const bufferLength = analyserNode.frequencyBinCount; // This is fftSize/2
-            const dataArray = new Uint8Array(bufferLength);
-            analyserNode.getByteFrequencyData(dataArray);
-            
-            // Find the frequency bin with the highest amplitude
-            let maxAmplitude = 0;
-            let maxIndex = 0;
-            
-            for (let i = 0; i < bufferLength; i++) {
-                if (dataArray[i] > maxAmplitude) {
-                    maxAmplitude = dataArray[i];
-                    maxIndex = i;
-                }
-            }
-            
-            // Convert bin index to frequency (Hz)
-            // Each bin represents a frequency range
-            const nyquist = audioContext.sampleRate / 2; // Max frequency we can detect
-            const frequency = (maxIndex / bufferLength) * nyquist;
-            
-            return Math.round(frequency);
-        }
-        
-        // CORRECTED: Update live audio information
-        function updateAudioInfo() {
-            if (!analyserNode || !isPlaying) {
-                currentFrequency.textContent = '0 Hz';
-                requestAnimationFrame(updateAudioInfo);
-                return;
-            }
-            
-            // Get dominant frequency
-            const freq = getDominantFrequency();
-            currentFrequency.textContent = `${freq} Hz`;
-            
-            // Update volume display
-            if (gainNode) {
-                const volumeValue = parseInt(volumeSlider.value);
-                currentVolumeLevel.textContent = `${volumeValue}%`;
-            }
-            
-            requestAnimationFrame(updateAudioInfo);
-        }
-        
-        // Visualize audio frequencies
-        function visualize() {
-            if (!analyserNode || !isPlaying) {
-                animationFrameId = requestAnimationFrame(visualize);
-                return;
-            }
-            
-            const bufferLength = analyserNode.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            analyserNode.getByteFrequencyData(dataArray);
-            
-            // Clear canvas
-            canvasCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-primary').trim();
-            canvasCtx.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
-            
-            // Draw frequency bars
-            const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
-            let barHeight;
-            let x = 0;
-            
-            for (let i = 0; i < bufferLength; i++) {
-                barHeight = dataArray[i] * (visualizerCanvas.height / 256);
-                
-                // Color gradient based on frequency (low=red, mid=green, high=blue)
-                const hue = (i / bufferLength) * 240; // 0-240 (red to blue)
-                
-                canvasCtx.fillStyle = `hsl(${hue}, 100%, 60%)`;
-                canvasCtx.fillRect(x, visualizerCanvas.height - barHeight, barWidth, barHeight);
-                
-                x += barWidth + 1;
-            }
-            
-            animationFrameId = requestAnimationFrame(visualize);
-        }
-        
-        // Set up media event listeners
-        function setupMediaListeners() {
-            if (!mediaElement) return;
-            
-            mediaElement.addEventListener('timeupdate', () => {
-                if (!mediaElement.duration) return;
-                
-                const percent = (mediaElement.currentTime / mediaElement.duration) * 100;
-                timelineSlider.value = percent;
-                
-                currentTime.textContent = formatTime(mediaElement.currentTime);
-                duration.textContent = formatTime(mediaElement.duration);
-            });
-            
-            mediaElement.addEventListener('play', () => {
-                isPlaying = true;
-                playButton.classList.add('playing');
-                playButton.innerHTML = '<i class="fas fa-pause"></i><span>Pause Media</span>';
-                
-                if (audioContext && audioContext.state === 'suspended') {
-                    audioContext.resume();
-                }
-                
-                if (animationFrameId) {
-                    cancelAnimationFrame(animationFrameId);
-                }
-                visualize();
-                updateAudioInfo();
-            });
-            
-            mediaElement.addEventListener('pause', () => {
-                isPlaying = false;
-                playButton.classList.remove('playing');
-                playButton.innerHTML = '<i class="fas fa-play"></i><span>Play Media</span>';
-                
-                if (animationFrameId) {
-                    cancelAnimationFrame(animationFrameId);
-                }
-            });
-            
-            mediaElement.addEventListener('ended', () => {
-                isPlaying = false;
-                playButton.classList.remove('playing');
-                playButton.innerHTML = '<i class="fas fa-play"></i><span>Play Media</span>';
-                
-                if (animationFrameId) {
-                    cancelAnimationFrame(animationFrameId);
-                }
-            });
-            
-            mediaElement.addEventListener('loadedmetadata', () => {
-                duration.textContent = formatTime(mediaElement.duration);
-            });
-        }
-        
-        // Format time in MM:SS
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
-            
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-        
-        // Event Listeners for Controls
-        volumeSlider.addEventListener('input', updateGain);
-        
-        hzInput.addEventListener('input', () => {
-            let value = parseInt(hzInput.value);
-            if (value < 20) value = 20;
-            if (value > 20000) value = 20000;
-            hzInput.value = value;
-            updateEQ();
-        });
-        
-        eqSlider.addEventListener('input', updateEQ);
-        
-        // Play/Pause Button
-        playButton.addEventListener('click', () => {
-            if (!mediaElement || !mediaElement.src) {
-                alert('Please select a media file first.');
-                return;
-            }
-            
-            if (isPlaying) {
-                mediaElement.pause();
-            } else {
-                mediaElement.play();
-            }
-        });
-        
-        // Timeline Slider
-        timelineSlider.addEventListener('input', () => {
-            if (!mediaElement || !mediaElement.duration) return;
-            
-            const percent = parseFloat(timelineSlider.value);
-            const time = (percent / 100) * mediaElement.duration;
-            currentTime.textContent = formatTime(time);
-        });
-        
-        timelineSlider.addEventListener('change', () => {
-            if (!mediaElement || !mediaElement.duration) return;
-            
-            const percent = parseFloat(timelineSlider.value);
-            const time = (percent / 100) * mediaElement.duration;
-            mediaElement.currentTime = time;
-        });
-        
-        // Download Processed Audio
-        downloadAudio.addEventListener('click', async () => {
-            if (!currentFile) {
-                alert('Please select a file first.');
-                return;
-            }
-            
-            try {
-                downloadAudio.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>';
-                downloadAudio.disabled = true;
-                
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                const url = URL.createObjectURL(currentFile);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `volume_upgraded_${currentFile.name}`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                setTimeout(() => {
-                    alert('Audio file processed and ready for download!');
-                }, 500);
-                
-            } catch (error) {
-                console.error('Error processing audio:', error);
-                alert('Error processing audio. Please try again.');
-            } finally {
-                downloadAudio.innerHTML = '<i class="fas fa-file-audio"></i><span>Download Processed Audio</span>';
-                downloadAudio.disabled = false;
-            }
-        });
-        
-        // Download Processed Video
-        downloadVideo.addEventListener('click', async () => {
-            if (!currentFile || currentFileType !== 'video') {
-                alert('Please select a video file first.');
-                return;
-            }
-            
-            try {
-                downloadVideo.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>';
-                downloadVideo.disabled = true;
-                
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                const url = URL.createObjectURL(currentFile);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `volume_upgraded_${currentFile.name}`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                setTimeout(() => {
-                    alert('Video file downloaded with enhanced audio.');
-                }, 500);
-                
-            } catch (error) {
-                console.error('Error processing video:', error);
-                alert('Error processing video. Please try again.');
-            } finally {
-                downloadVideo.innerHTML = '<i class="fas fa-file-video"></i><span>Download Processed Video</span>';
-                downloadVideo.disabled = false;
-            }
-        });
-        
-        // Initialize the application
-        window.addEventListener('DOMContentLoaded', () => {
-            const sampleText = document.createElement('div');
-            sampleText.style.marginTop = '10px';
-            sampleText.style.fontSize = '0.9rem';
-            sampleText.style.color = 'var(--text-secondary)';
-            sampleText.innerHTML = '<i class="fas fa-info-circle"></i> Try with any audio or video file';
-            document.querySelector('.file-selector').appendChild(sampleText);
-            
-            updateGain();
-            updateEQ();
-            
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                visualizerCanvas.width = visualizerCanvas.offsetWidth;
-                visualizerCanvas.height = visualizerCanvas.offsetHeight;
-            });
-        });
-    </script>
+<script>
+(function () {
+  var player = document.getElementById('player');
+  var fileInput = document.getElementById('fileInput');
+  var fileName = document.getElementById('fileName');
+  var slider = document.getElementById('gain');
+  var readout = document.getElementById('readout');
+  var warn = document.getElementById('warn');
+
+  var ctx = null, gainNode = null, url = null;
+
+  function setupAudio() {
+    if (ctx) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    ctx = new AC();
+    var src = ctx.createMediaElementSource(player);
+    gainNode = ctx.createGain();
+    // Soft limiter so very high gain stays loud without harsh digital clipping
+    var limiter = ctx.createDynamicsCompressor();
+    limiter.threshold.value = -2;
+    limiter.knee.value = 0;
+    limiter.ratio.value = 20;
+    limiter.attack.value = 0.003;
+    limiter.release.value = 0.1;
+    src.connect(gainNode);
+    gainNode.connect(limiter);
+    limiter.connect(ctx.destination);
+    applyGain();
+  }
+
+  function applyGain() {
+    var pct = Number(slider.value);
+    readout.firstChild.nodeValue = pct;
+    readout.classList.toggle('hot', pct > 100);
+    slider.style.setProperty('--fill', (pct / 10) + '%');
+    warn.textContent = pct > 300 ? 'Very loud. Lower your device volume first.' : '';
+    if (gainNode) {
+      // Smooth change so moving the slider while playing never clicks
+      gainNode.gain.setTargetAtTime(pct / 100, ctx.currentTime, 0.015);
+    }
+  }
+
+  slider.addEventListener('input', applyGain);
+
+  fileInput.addEventListener('change', function () {
+    var f = fileInput.files[0];
+    if (!f) return;
+    if (url) URL.revokeObjectURL(url);
+    url = URL.createObjectURL(f);
+    fileName.textContent = f.name;
+    player.src = url;
+    player.classList.remove('hidden');
+    // Audio-only files: shrink the player to a plain control bar
+    player.style.height = f.type.indexOf('audio') === 0 ? '54px' : '';
+  });
+
+  // Audio context must start from a user gesture
+  player.addEventListener('play', function () {
+    setupAudio();
+    if (ctx.state === 'suspended') ctx.resume();
+  });
+
+  applyGain();
+})();
+</script>
 </body>
 </html>
